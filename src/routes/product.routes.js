@@ -1,126 +1,25 @@
 import express from "express";
+import { create, getAll, getById, remove, update } from "../controllers/product.controller.js";
+
 const router = express.Router();
 
 
 const products = [];
 
 //crud products
-router.get("/", (req, res) =>{
-   // res.send("<h1>All product</h1>");
-   
-
- res.status(200).json({
-    message: "products fetched",
-    success: true,
-    date:products,
-   });
-});
+router.get("/", getAll)
 
 //get by id
-router.get("/:id", (req, res) =>{
-   // res.send("<h1>All products</h1>");
-//const id = req.params.id;
-
- const {id} = req.params;
-
-   const product = products.find((product) => product._id === Number(id));
-
-   if(!product){
-res.status(404).json({
-    message: "product not found",
-    success: true,
-    date:null,
-   });
-   return;
-}
-
-res.status(200).json({
-   message: "product by id ${id} fetched",
-    success: true,
-    date:null,
-});
-});
+router.get("/:id", getById);
 
 
-
-router.post("/", (req, res) =>{
-   // res.send("<h1>Product created</h1>");
-   const {name,price,brand} = req.body
-
-products.push({
-   name,
-   price,
-   brand,
-   createdAt:new Date(Date.now()),
-   _id: products.length +1,
-})
-
- res.status(201).json({
-    message: "product created",
-    success: true,
-    date:product[products.length - 1]
-   });
-});
+router.post("/", create);
 
 //update
-router.put("/:id", (req, res) =>{
-   // res.send("<h1>Product updated</h1>");
-//const id = req.params.id;
-const {id} = req.params;
-
-      const {name,price,brand} = req.body
-
-      const index = products.findIndex((product) => product._id === Number(id));
-
- 
-      if(index === -1){
-         res.status(404).json({
-message: "products not found",
-    success: false,
-    date:null
-         });
-         return
-      }
-
-      products[index] = {
-         ...products[index],
-         name,
-         price,
-         brand
-      };
-
-      res.status(200).json({
-message: "products updated",
-    success: true,
-    date:products[index],
-         });
-
-});
-
+router.put("/:id",update);
 
 //delete
-router.delete("/products/:id", (req, res) => {
-   // res.send("<h1>Product Deleted</h1>");
-const {id} = req.params;
-      const index = products.findIndex((product) => product._id === Number(id));
-
-      if(index === -1){
-res.status(404).json({
-message: "product not found",
-    success: false,
-    date:null
-         });
-         return
-      }
-
-   products.slice(index,1);
-   res.status(200).json({
-      message: "product deleted",
-    success: true,
-    date:null
-   });
-});
-
+router.delete("/products/:id", remove);
 
 export default router;
 
