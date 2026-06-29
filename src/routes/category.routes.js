@@ -1,18 +1,18 @@
 import express from "express";
-import { create, getAll, getById, remove, update } from "../controllers/product.controller.js";
+import { create, getAll, getById, remove, update } from "../controllers/category.controller.js";
 
 const router = express.Router();
 
+//const category = [];
 
-//const products = [];
-
-//crud products
+//crud category
+//get all
 router.get("/", getAll)
 
 //get by id
 router.get("/:id", getById);
 
-
+//create
 router.post("/", create);
 
 //update
