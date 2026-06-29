@@ -2,12 +2,19 @@
 
 import http from "http";
 import express from "express";
+import userRoutes from "./routes/user.routes.js"
+import productRoutes from "./routes/product.routes.js"
 
 //creating express app instance
 const app = express();
 
+
+
+
 //*creating http server
 const server = http.createServer(app);
+
+app.use(express.json());
    
 
 //ip -> 198.168.1.1:1112
@@ -15,171 +22,20 @@ const server = http.createServer(app);
 //home -> get, / => <h1> Home Page</h1>
   //  app.get(path, handler);
 app.get("/", (req, res) => {
-    res.send("<h1>Home Page</h1>");
+   // res.send("<h1>Home Page</h1>");
+   res.status(200).json({
+      message: "Server is up and running"
+   })
 });
 
-//crud users
-//get all users
-//get /users -> user page
-//route param (:id)
-app.get("/users", (req, res) =>{
-   // res.send("<h1>All Users</h1>");
-    res.json({
-    message: "user fetched",
-    success: true,
-    date: {
-        _id: 1, 
-        name: "John Doe",
-        email: "john@gmail.com"
-    },
-   });
-});
-
-//get by id
-//users/100 => {id:100}
-// /posts/:userId/:postId => /posts/1/2 => {postId:2,userId}
-
-app.get("/users/:id", (req, res) =>{
-   // res.send("<h1>All Users</h1>");
-   //req.param => {} => {id:1}
-   //console.log(req.params);
-   const id = req.params.id;
-
-    res.json({
-    message: "user by id fetched",
-    success: true,
-    date: {
-        _id: 1, 
-        name: "John Doe",
-        email: "john@gmail.com"
-    },
-   });
-});
-
-
-//create
-app.post("/users", (req, res) =>{
-   // res.send("<h1>User created</h1>");
-   res.json({
-    message: "user created",
-    success: true,
-    date: {
-        _id: 1, 
-        name: "John Doe",
-        email: "john@gmail.com"
-    },
-   });
-});
-
-//update
-app.put("/users/:id", (req, res) =>{
-   // res.send("<h1>User updated</h1>");
-      
-   const id = req.params.id;
-
-    res.json({
-    message: "user updated",
-    success: true,
-    date: {
-        _id: 1, 
-        name: "John Doe",
-        email: "john@gmail.com"
-    },
-   });
-});
-
-
-//delete
-app.delete("/users/:id", (req, res) => {
-// res.send("<h1>User Deleted</h1>");
-
-const id = req.params.id;
-
- res.json({
-    message: "user delete",
-    success: true,
-    date: {
-        _id: 1, 
-        name: "John Doe",
-        email: "john@gmail.com"
-    },
-   });
-});
-
-
-//crud product
-app.get("/product", (req, res) =>{
-   // res.send("<h1>All product</h1>");
-
- res.json({
-    message: "product fetched",
-    success: true,
-    date: {
-        _id: 1, 
-        name: "t-shirt",
-    },
-   });
-});
-
-//get by id
-app.get("/product/:id", (req, res) =>{
-   // res.send("<h1>All product</h1>");
-const id = req.params.id;
-
- res.json({
-    message: "product fetched",
-    success: true,
-    date: {
-        _id: 1, 
-        name: "t-shirt",
-    },
-   });
-});
-
-app.post("/product", (req, res) =>{
-   // res.send("<h1>Product created</h1>");
- res.json({
-    message: "product created",
-    success: true,
-    date: {
-        _id: 1, 
-        name: "t-shirt",
-    },
-   });
-});
-
-//update
-app.put("/product/:id", (req, res) =>{
-   // res.send("<h1>Product updated</h1>");
-const id = req.params.id;
-
- res.json({
-    message: "product updated",
-    success: true,
-    date: {
-        _id: 1, 
-        name: "t-shirt",
-    },
-   });
-});
-
-//delete
-app.delete("/product/:id", (req, res) => {
-   // res.send("<h1>Product Deleted</h1>");
-const id = req.params.id;
-
- res.json({
-    message: "product delete",
-    success: true,
-    date: {
-        _id: 1, 
-        name: "t-shirt",
-    },
-   });
-});
+//using routes
+app.use("/users", userRoutes);
+app.use("/products", productRoutes);
 
 
 
+
+ 
 server.listen(8081, 'localhost', ()=>{
     //127.0.0.1
     console.log(`Server is running at http://localhost:8081`);
@@ -193,3 +49,52 @@ server.listen(8081, 'localhost', ()=>{
 
 //school management
 //student, teacher
+
+//http://localhost:8081/users?name=john&page=1&limit=10(? paxadi ko 
+//req.query maa aauxa)
+
+//req.url
+//req.param -> {}
+//req.query -> {name:"john",page:'1',limit:'10'}
+//req.body -> {}
+
+//post/users => res.body => {}
+
+
+   //*REST API
+   //REST -> Representational State Transfer 
+   //api -> Application Programming Interface
+
+   //constraints
+   //*stateless(api stateless hunu paryo, server side maa manage gardaina)
+   //client-server architecture 
+   //layered architecture
+   //client-cdn, proxy server, loadbalancer ... -server
+   //cacheable response
+   //Cache-control 
+
+   //*uniform interface :
+   //route naming
+   //use noun
+   //use meaningful http methods => GET, POST, PUT, PATCH, DELETE
+   //use meaningful response status code -> 
+   //100 - 199 -> informational
+   //200 - 299 -> success 
+   //200 -> ok , 201 -> created
+   //300 - 399 -> redirectional
+   //400 - 499 -> client side error,, 404
+   //400 -> bad request
+   //401 -> unauthorized
+   //403 -> forbidden
+   //404 -> not found
+   //500 - 599 -> server side error , 
+   //500 -> Internal server error
+   //502 -> bad gateway
+
+   //endpoint
+   //get /users
+   //get /users/1
+
+   //resource
+   // dashboard => {}
+   //users => json, html, xml
