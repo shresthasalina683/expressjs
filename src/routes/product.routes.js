@@ -4,7 +4,7 @@ import { create, getAll, getById, remove, update } from "../controllers/product.
 const router = express.Router();
 
 
-const products = [];
+//const products = [];
 
 //crud products
 router.get("/", getAll)

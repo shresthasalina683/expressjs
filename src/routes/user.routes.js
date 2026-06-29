@@ -2,7 +2,7 @@ import express from "express";
 import { create, getAll, getById, remove, update } from "../controllers/user.controller.js";
 
 const router = express.Router();
-const users = [];
+//const users = [];
 
 
 
