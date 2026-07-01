@@ -9,13 +9,47 @@ import categoryRoutes from "./routes/category.routes.js"
 //creating express app instance
 const app = express();
 
-
-
-
 //*creating http server
 const server = http.createServer(app);
 
-app.use(express.json());
+//middleware 
+const middleware = (req,res,next)=>{
+   console.log("middleware 1");
+   next();
+};
+
+app.use(middleware);
+
+
+//using middleware
+//app.use(middleware);
+app.use((req,res,next)=>{
+   console.log("mid 2");
+   req.user = {
+      name: "John Doe",
+   };
+next();
+});
+
+app.use((req,res,next)=>{
+   console.log("mid 3");
+   console.log(req.user);
+   if(req.user){
+      next();
+   }else{
+res.status(401).json({
+   message:"Unauthorized. Access denied",
+});
+   };
+//    res.status(200).json({
+//       message:"Response from middleware 3",
+//    });
+// //next();
+});
+
+
+
+app.use(express.json()); //express ko include middleware
    
 
 //ip -> 198.168.1.1:1112
@@ -42,6 +76,17 @@ server.listen(8081, 'localhost', ()=>{
     console.log(`Server is running at http://localhost:8081`);
     console.log("press ctrl+c to close the server");
 });
+
+app.use((err,req,res,next) => { 
+   console.log("error handler");
+   console.log(err);
+   res.status(err?.statusCode ?? 500).json({
+      message: err?.message ?? "something went wrong",
+      success: false,
+      data: null,
+   });
+});
+
 
 
 //Express js /  nestjs -> framework
@@ -101,5 +146,27 @@ server.listen(8081, 'localhost', ()=>{
    //users => json, html, xml
 
 
-   //middleware(imp topic)
+   //middleware(imp topic):
+   //It is a function execute between req-res cycle.
+   //1. has access to req obj, res obj & next function
+   //2. can execute own logic 
+   //3. can modify req and res object
+   //4. can end req-res cycle
+
+//middleware use garni ho bhanya next call garnu parxa
+//kunai pani middleware la pass garxa bhanya tyo request controller samma na pugin jal aru la call
+//garna milxa matlab mid1 la update garako mid2, mid3 -midN samma la use garna milxa 
+
+   //types of middleware
+   //custom mid
+   //1. Application level middleware(every logic maa use garnu parni bela yo use hunxa)
+   //2. route level middleware(jastai ki get maa matra ki create, post maa use hune application
+   //ko jasto sabai maa na hune
+   //3. error handle middleware(error handle in global level): (err,req,res,next) =>{ }
+   //req -> mid1->mid2->mid3->midN -> controller (yesma next call garda jun tes paxi ta)
+   //order matter gardaina error maa
+//error handle garda hamla 4otai rakhnu parni hunxa (err,req,res,next)
+
+   //third party middleware(file download garna multer, this is also a middleware)
+
    //mongodb

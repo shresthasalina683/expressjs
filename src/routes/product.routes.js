@@ -3,6 +3,11 @@ import { create, getAll, getById, remove, update } from "../controllers/product.
 
 const router = express.Router();
 
+const mid = (req, res, next) => {
+    console.log("get all products mid");
+    next();
+};
+
 
 //const products = [];
 
